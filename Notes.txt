@@ -7,3 +7,11 @@
     - Go to package.json
     - Add "watch": "nodemon app"
     - Run npm run watch
+
+3. You will need to create a route
+- Essentially, everytie you get a app.get() or app.post() you will be using a router to tell whhere to go
+- Better for organization
+
+4. "require(router.js)" has two functionalities 
+i - Executes file inside its 
+ii - Retunrs all the objects,variables, functions..etc  INSIDE that file which we can now use in the invoking class (ex. App.js)
