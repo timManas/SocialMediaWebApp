@@ -1,0 +1,9 @@
+1. How to launch/start the app ?
+- From the root folder of this project
+- Type in "node app"  or "node app.js"
+
+2. How to set up Automatic App Update
+    - Install nodemon "npm install nodemon"
+    - Go to package.json
+    - Add "watch": "nodemon app"
+    - Run npm run watch
