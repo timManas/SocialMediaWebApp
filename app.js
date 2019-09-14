@@ -1,7 +1,8 @@
 const express = require("express")     // We make this const because we dont want this to change ever. 
 const app = express()
 const session = require("express-session")
-const MongoStore = require("connect-mongo")(session)        
+const MongoStore = require("connect-mongo")(session)    
+const flash = require("connect-flash")    
 const router = require("./router.js")
 
 
@@ -17,7 +18,7 @@ let sessionOptions = session({
 })
 
 app.use(sessionOptions)     // Our app Now supports Sessions
-
+app.use(flash())            // Use flash animations
 
 // Note this is how you submit data over the web via json
 // Tell express to add user submitted data onto our request object. So we can access it from req.body
