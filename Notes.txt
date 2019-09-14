@@ -90,3 +90,4 @@ Callback
 - Server side for security
 - Browser side for UX
 
+23. Gravatar for setting up user Avatar

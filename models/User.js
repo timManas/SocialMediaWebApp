@@ -1,6 +1,7 @@
 const bcyptjs = require("bcryptjs")
 const usersCollection = require("../db").db().collection("users")       // This creates a collection on MongoDB   
 const validator = require("validator")
+const md5 = require("md5")
 
 // Constructor
 let User = function (data) {
@@ -41,10 +42,9 @@ User.prototype.login = function () {
 
         this.cleanup()
         usersCollection.findOne({ username: this.data.username }).then((attemptedUser) => {
-
-
-
             if (attemptedUser && bcyptjs.compareSync(this.data.password, attemptedUser.password)) { // bcyptjs.compareSync() Compares password from DB to password typed
+                this.data = attemptedUser
+                this.getAvatar()
                 resolve("Congrats")
             } else {
                 reject("Error login")
@@ -105,6 +105,7 @@ User.prototype.register = function () {
                 // Step3: Save user data into database
                 await usersCollection.insertOne(this.data)
 
+                this.getAvatar()        
                 resolve()
             } else {
                 reject(this.errors)
@@ -112,5 +113,8 @@ User.prototype.register = function () {
     })
 }
 
+User.prototype.getAvatar = function () {
+    this.avatar = `https://gravatar.com/avatar/${md5(this.data.email)}?s=128`
+}
 
 module.exports = User

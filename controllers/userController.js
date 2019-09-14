@@ -8,7 +8,7 @@ exports.login = function(req, res) {
     
     // Remmeber its the Model and not the controller handling the business Logic
     user.login().then(function(result) {
-        req.session.user = {favColour: "Blue", username: user.data.username}
+        req.session.user = {avatar: user.avatar, username: user.data.username}
         reqç.session.save(function() {
             res.redirect("/")
         })
@@ -33,7 +33,7 @@ exports.register = function(req, res) {
     let user = new User(req.body)
     user.register().then(()=> {
 
-        req.session.user = {username: user.data.username}
+        req.session.user = {avatar: user.avatar, username: user.data.username}
         req.session.save(function() {
             res.redirect("/")
         })
@@ -51,7 +51,7 @@ exports.register = function(req, res) {
 
 exports.home = function(req, res) {
     if(req.session.user) {
-        res.render("home-dashboard", {username: req.session.user.username})
+        res.render("home-dashboard", {username: req.session.user.username, avatar: req.session.user.avatar})
     } else {
         res.render("home-guest", {errors: req.flash("errors"), regErrors: req.flash("regErrors")})
     }
