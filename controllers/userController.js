@@ -5,7 +5,9 @@ exports.login = function(req, res) {
     // user.login(function(result) {               // Solution: This is using a callback Solution. This is the traditional way of doing things
     //     res.send(result)
     // })                        // Remmeber its the Model and not the controller handling the business Logic
+    
     user.login().then(function(result) {
+        req.session.user = {favColour: "Blue", username: user.data.username}
         res.send(result)
     }).catch(function(e) {
         res.send(e)
@@ -27,6 +29,10 @@ exports.register = function(req, res) {
 }
 
 exports.home = function(req, res) {
-    res.render("home-guest")
+    if(req.session.user) {
+        res.send("Welcome")
+    } else {
+        res.render("home-guest")
+    }
 }
 

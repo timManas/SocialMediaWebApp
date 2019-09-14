@@ -1,6 +1,20 @@
 const express = require("express")     // We make this const because we dont want this to change ever. 
 const app = express()
+const session = require("express-session")
 const router = require("./router.js")
+
+
+// We need to configur the session to trust users who have successfully Logged in
+let sessionOptions = session({
+    secret: "Hello World",
+    resve: false,
+    saveUninitialized: false,
+    cookie: {maxAge: 1000 * 60 * 60 * 24,
+             httpOnly: true}
+})
+
+app.use(sessionOptions)     // Our app Now supports Sessions
+
 
 // Note this is how you submit data over the web via json
 // Tell express to add user submitted data onto our request object. So we can access it from req.body

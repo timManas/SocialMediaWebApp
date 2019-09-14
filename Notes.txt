@@ -75,3 +75,11 @@ Callback
 17. Await requires a "async" function to be run
 
 18. Hash a password before storing into Database. Not the samething as Encrypting. One way conversation
+- Useb bcryptJS to hash your password before storing
+
+19. Once a user has logged on, the server has no memory of the user has already logged on
+- Hence the server needs to "trust" the client once it has logged in
+- We can use two solutions: Sessions or Tokens
+
+20. Sessions uses cookies. They are unique for each browser(Chrome vs Firefox) which successfully logged in
+- Session  info should be stored in MongoDB instead of the memory
