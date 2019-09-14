@@ -1,7 +1,7 @@
 const express = require("express")     // We make this const because we dont want this to change ever. 
 const app = express()
 const session = require("express-session")
-const MongoStore = require("connect-mongo")(session)        // The session is referencing this particular session
+const MongoStore = require("connect-mongo")(session)        
 const router = require("./router.js")
 
 
@@ -9,7 +9,7 @@ const router = require("./router.js")
 // We need to configur the session to trust users who have successfully Logged in
 let sessionOptions = session({
     secret: "Hello World",
-    store: new MongoStore({client: require("./db")}),
+    store: new MongoStore({client: require("./db")}),                   // this creates a collection on Mongo DB
     resave: false,
     saveUninitialized: false,
     cookie: {maxAge: 1000 * 60 * 60 * 24,

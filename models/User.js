@@ -1,5 +1,5 @@
 const bcyptjs = require("bcryptjs")
-const usersCollection = require("../db").db().collection("users")      
+const usersCollection = require("../db").db().collection("users")       // This creates a collection on MongoDB   
 const validator = require("validator")
 
 // Constructor
