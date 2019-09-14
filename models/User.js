@@ -7,6 +7,7 @@ let User = function(data) {
     this.errors = []
 }
 
+// We clean up the data here
 User.prototype.cleanup = function() {
     if(typeof(this.data.username) != "string") {this.data.username = ""}
     if(typeof(this.data.email) != "string") {this.data.email = ""}
@@ -18,10 +19,20 @@ User.prototype.cleanup = function() {
         email: this.data.email.trim().toLowerCase(),
         password: this.data.password
     }
-
-    // This actually 
 }
 
+User.prototype.login = function(callback) {
+    this.cleanup()
+    usersCollection.findOne({username: this.data.username}, (err, attemptedUser) => {
+        if (attemptedUser && attemptedUser.password == this.data.password ) {
+            callback("Congrats")
+        } else {
+            callback("Error login")
+        }
+    })                // This is the Collection currently inside the database
+}
+
+// Validate the password here
 User.prototype.validate = function() {
     if (this.data.username == "") {this.errors.push("Username missing")}
 
@@ -30,9 +41,9 @@ User.prototype.validate = function() {
     if (this.data.password == "") {this.errors.push("Password missing")}
     if (this.data.password.length > 0 && this.data.password.length < 4) {this.errors.push("Password needs to be min 4 character")}
     if (this.data.username.length > 0 && this.data.username.length < 4) {this.errors.push("Username needs to be min 4 character")}
-    
 }
 
+// Register the user into the database
 User.prototype.register = function() {
 
     // Step1: Validate User Data

@@ -1,3 +1,10 @@
+Flow is 
+
+Incoming: app.js
+Outoung: app.js -> router.js
+                        -> Goes to userController -> register() -> displays home-guest.ejs
+                        -> Register: userController.js -> registers() -> users.js -> register() -> Adds onto MongoDB
+
 1. How to launch/start the app ?
 - From the root folder of this project
 - Type in "node app"  or "node app.js"
@@ -15,3 +22,34 @@
 4. "require(router.js)" has two functionalities 
 i - Executes file inside its 
 ii - Retunrs all the objects,variables, functions..etc  INSIDE that file which we can now use in the invoking class (ex. App.js)
+
+
+6. Purpose of the Model
+- Where business logic resides
+- Ex. Password must be unique
+
+
+5. Purpose of the Controller
+- Accept input (network request) and convert requests into commands to be used by the Model 
+- Depending on request, controller will call upon the appopriate Model / business logic
+
+6. Connection to Database is done on db.js
+
+7. Once we connect to the database THEN and ONLY THEN do we start listening for requests
+
+8. We create db.js file and export the contents so we dont have to constantly "require" and create multiple instances
+of the db 
+
+9. Hence to get stuff from the db, you can just "require(db.js)" and you now have access to db capabilities for CRUD
+
+10. Use dotenv (npm install dotenv) to encapsulate your db password
+
+11. How to acces Env variables
+- download dotenv
+- create .env file
+- create variable name  "CONNECTIONSTRING=XXX...."
+- access it using process.env.CONNECTIONSTRING 
+
+
+12. Remmeber its the Model and not the controller handling the business Logic
+    - Hence we have created the "User.js" model

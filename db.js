@@ -1,8 +1,12 @@
+const dotenv = require("dotenv")
+dotenv.config()                     // Looks for file called ".env"
+
 const mongodb = require("mongodb")      // Remember you need to install Mongodb first using npm
-const connectionString = "mongodb+srv://timmanas:Apple@cluster0-9czdc.mongodb.net/ComplexApp?retryWrites=true&w=majority"
+
+let connectionString = process.env.CONNECTIONSTRING     // This is how you access Env variables
 
 mongodb.connect(connectionString, {useNewUrlParser: true, useUnifiedTopology: true},function(err, client) {
     module.exports = client.db()    // This allows us to export this one database to whatever files "requires"
    const app = require("./app")
-   app.listen(3000)             // The APPPLICATION WILL NOT START UNLESS Connection to DB is established
+   app.listen(process.env.PORT)             // The APPPLICATION WILL NOT START UNLESS Connection to DB is established
 })               
