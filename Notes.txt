@@ -53,3 +53,25 @@ of the db
 
 12. Remmeber its the Model and not the controller handling the business Logic
     - Hence we have created the "User.js" model
+
+
+13. What is a Promise in JS ? 
+- An object that represents the eventual completion of an asynchronous operation
+- Has either Resolve or Reject
+
+
+14. Promise vs Traditional Callback approach ?
+Promises
+- Allows us to chain asynchronous events for promises
+- Much cleaner code
+
+Callback 
+- Code inside of code (Nested code)
+
+15. The arrow funciton => Does NOT modify the "this" keyword
+
+
+16. You can use "Await" keyboard to ensure that asychrnous functions are executed orderly
+17. Await requires a "async" function to be run
+
+18. Hash a password before storing into Database. Not the samething as Encrypting. One way conversation

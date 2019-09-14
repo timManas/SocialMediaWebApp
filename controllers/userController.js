@@ -2,10 +2,14 @@ const User = require("../Models/User.js")
 
 exports.login = function(req, res) {
     let user = new User(req.body)
-    user.login(function(result) {               // Solution: This is using a callback Solution. This is the traditional way of doing things
+    // user.login(function(result) {               // Solution: This is using a callback Solution. This is the traditional way of doing things
+    //     res.send(result)
+    // })                        // Remmeber its the Model and not the controller handling the business Logic
+    user.login().then(function(result) {
         res.send(result)
-    })                        // Remmeber its the Model and not the controller handling the business Logic
-    
+    }).catch(function(e) {
+        res.send(e)
+    })         // then() executes if promise was successful and catch() executes if promise has failed
 }
 
 exports.logout = function(req, res) {
