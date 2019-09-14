@@ -85,3 +85,8 @@ Callback
 - Session  info should be stored in MongoDB instead of the memory
 
 21. We use flash to store any errors to the user if they logged incorrectly
+
+22. You want validation on both side
+- Server side for security
+- Browser side for UX
+

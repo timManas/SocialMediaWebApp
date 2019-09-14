@@ -35,55 +35,82 @@ User.prototype.login = function () {
     // })                // This is the Collection currently inside the database
 
     // Return a new object which is a promise 
-    return new Promise((resolve, reject) =>{
+    return new Promise((resolve, reject) => {
         // We can perform asynchronous actions. When those functions have been completed, 
         // Then we can call resolve or Reject
- 
-        this.cleanup()
-        usersCollection.findOne({ username: this.data.username }).then((attemptedUser)=> {
 
-            
+        this.cleanup()
+        usersCollection.findOne({ username: this.data.username }).then((attemptedUser) => {
+
+
 
             if (attemptedUser && bcyptjs.compareSync(this.data.password, attemptedUser.password)) { // bcyptjs.compareSync() Compares password from DB to password typed
                 resolve("Congrats")
             } else {
                 reject("Error login")
             }
-        }).catch(function() {
+        }).catch(function () {
             reject("Pleae try again later")
         })                // This is the Collection currently inside the database
     })
 }
 
 // Validate the password here
-User.prototype.validate = function () {
-    if (this.data.username == "") { this.errors.push("Username missing") }
+User.prototype.validate = function() {
+    return new Promise(async (resolve, reject) => {
+        if (this.data.username == "") { this.errors.push("Username missing") }
+        if (!validator.isEmail(this.data.email)) { this.errors.push("Email missing") }
+        if (this.data.password == "") { this.errors.push("Password missing") }
+        if (this.data.password.length > 0 && this.data.password.length < 4) { this.errors.push("Password needs to be min 4 character") }
+        if (this.data.username.length > 0 && this.data.username.length < 4) { this.errors.push("Username needs to be min 4 character") }
+    
+        // Check is username is already taken
+        if (this.data.username.length > 2 &&
+            this.data.username.length < 30 &&
+            validator.isAlphanumeric(this.data.username)) {
+    
+            let userNameExist = await usersCollection.findOne({ username: this.data.username }) // Check db to see if document exists
+            if (userNameExist) {
+                this.errors.push("Username Taken")
+            }
+        }
+    
+        // Check if Email exists
+        if (validator.isAlphanumeric(this.data.username)) {
+            let userEmailExist = await usersCollection.findOne({ email: this.data.email }) // Check db to see if document exists
+            if (userEmailExist) {
+                this.errors.push("Email Already Taken")
+            }
+        }
 
-    if (!validator.isEmail(this.data.email)) { this.errors.push("Email missing") }
-
-    if (this.data.password == "") { this.errors.push("Password missing") }
-    if (this.data.password.length > 0 && this.data.password.length < 4) { this.errors.push("Password needs to be min 4 character") }
-    if (this.data.username.length > 0 && this.data.username.length < 4) { this.errors.push("Username needs to be min 4 character") }
+        resolve()
+        
+    })
 }
 
 // Register the user into the database
 User.prototype.register = function () {
+    return new Promise (async (resolve, reject) => {
+            // Step1: Validate User Data
+            this.cleanup()
+            await this.validate()
+        
+            // Step2:  Only if no validation errors
+            if (!this.errors.length) {
+        
+                // Hash Userpassword 
+                let salt = bcyptjs.genSaltSync(10)
+                this.data.password = bcyptjs.hashSync(this.data.password, salt)
+        
+                // Step3: Save user data into database
+                await usersCollection.insertOne(this.data)
 
-    // Step1: Validate User Data
-    this.cleanup()
-    this.validate()
-
-    // Step2:  Only if no validation errors
-    if (!this.errors.length) {
-
-        // Hash Userpassword 
-        let salt = bcyptjs.genSaltSync(10)
-        this.data.password = bcyptjs.hashSync(this.data.password, salt)
-
-        // Step3: Save user data into database
-        usersCollection.insertOne(this.data)
-    }
-
-
+                resolve()
+            } else {
+                reject(this.errors)
+            }
+    })
 }
+
+
 module.exports = User

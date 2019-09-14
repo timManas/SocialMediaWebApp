@@ -31,19 +31,29 @@ exports.logout = function(req, res) {
 
 exports.register = function(req, res) {
     let user = new User(req.body)
-    user.register()                     // This is the Model 
-    if(user.errors.length) {
-        res.send(user.errors)
-    } else {
-        res.send("Credentials Accepted")
-    }
+    user.register().then(()=> {
+
+        req.session.user = {username: user.data.username}
+        req.session.save(function() {
+            res.redirect("/")
+        })
+        
+    }).catch((regErrors)=> {
+        regErrors.forEach(function(err) {
+            req.flash("regErrors", err)
+        }) 
+        req.session.save(function() {
+            res.redirect("/")
+        })
+    })                  // This is the Model 
+
 }
 
 exports.home = function(req, res) {
     if(req.session.user) {
         res.render("home-dashboard", {username: req.session.user.username})
     } else {
-        res.render("home-guest", {errors: req.flash("errors")})
+        res.render("home-guest", {errors: req.flash("errors"), regErrors: req.flash("regErrors")})
     }
 }
 
