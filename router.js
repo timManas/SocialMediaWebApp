@@ -11,8 +11,8 @@
 
 
  // Post relted Routes
-  router.get("/create-post", userController.mustBeLoggedIn, postController.viewCreateScreen)
-
+router.get("/create-post", userController.mustBeLoggedIn, postController.viewCreateScreen)
+router.post("/create-post", userController.mustBeLoggedIn, postController.create)
 
 
 

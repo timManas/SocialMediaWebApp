@@ -99,6 +99,24 @@ We dont have to change the avatar everytime we create a page
 
 
 26. You can use <% %> to do dynamic stuff using JS
-27. <%= Executes code 
-    <%=  Prints something into ERB file
-    <%# Comments out code within brackets
+
+27.
+<% 'Scriptlet' tag, for control-flow, no output
+<%_ ‘Whitespace Slurping’ Scriptlet tag, strips all whitespace before it
+<%= Outputs the value into the template (HTML escaped)
+<%- Outputs the unescaped value into the template
+<%# Comment tag, no execution, no output
+<%% Outputs a literal '<%'
+%> Plain ending tag
+-%> Trim-mode ('newline slurp') tag, trims following newline
+_%> ‘Whitespace Slurping’ ending tag, removes all whitespace after it
+
+
+18. Theres two different types of /create-post
+- One for GET and another for post
+- Two are unique and independent from each other
+
+29. insertOne is a asynchonous Operation. We have no idea how long it will take to store in DB
+- We have two solutions, use then().catch() syntax or async keyword
+
+30. 
