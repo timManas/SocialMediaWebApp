@@ -51,7 +51,26 @@ Post.prototype.create = function() {
         }
     })
 
+}
 
+// TODO :: We dont include the Prototype here ... why ? 
+Post.findSingleById = function(id) {
+    return new Promise(async function(resolve, reject) {        // We have async since there is DB call
+
+        if (typeof(id) != "string" || !ObjectID.isValid(id)) {
+            reject()
+            return
+        }
+
+        // Id is valid at this point
+        let post = await postCollection.findOne({_id: new ObjectID(id)})
+        if (post) {
+            resolve(post)
+        } else {
+            reject()
+        }
+
+    })
 }
 
 
