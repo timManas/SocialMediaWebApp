@@ -1,5 +1,6 @@
 const postCollection = require("../db").db().collection("posts")    // Exports MongoDB Client so we do any operations 
 const ObjectID = require("mongodb").ObjectID        // We pass in string Id here and return ObjectID type
+const User = require("./User")
 
 let Post = function(data, userid) {
     this.data = data
@@ -63,9 +64,31 @@ Post.findSingleById = function(id) {
         }
 
         // Id is valid at this point
-        let post = await postCollection.findOne({_id: new ObjectID(id)})
-        if (post) {
-            resolve(post)
+        // let post = await postCollection.findOne({_id: new ObjectID(id)})
+        let posts = await postCollection.aggregate([
+            {$match: {_id: new ObjectID(id)}},
+            {$lookup: {from: "users", localField: "author", foreignField: "_id", as: "authorDocument"}},
+            {$project: {            // Project allows us to dictate what fields we want to have. It FILTERS out unwanted content
+                title:1,
+                body:1,
+                createdDate:1,
+                author:{$arrayElemAt: ["$authorDocument", 0]},
+            }}
+        ]).toArray()        // We use aggregate instead of findOne when we want to do multiple complex operations
+        
+        // Clean up author property in each post object
+        posts = posts.map(function(post) {
+            post.author = {
+                username: post.author.username,
+                avatar: new User(post.author, true).avatar
+            }
+            return post
+        })
+        
+        
+        if (posts.length) {
+            console.log(posts[0])
+            resolve(posts[0])           // Return first item in the array
         } else {
             reject()
         }
