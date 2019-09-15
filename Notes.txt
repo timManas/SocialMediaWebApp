@@ -91,3 +91,8 @@ Callback
 - Browser side for UX
 
 23. Gravatar for setting up user Avatar
+
+24. We only want logged in accounts to create post
+
+25. We create the header.ejs file so that the Header is consistent,
+We dont have to change the avatar everytime we create a page

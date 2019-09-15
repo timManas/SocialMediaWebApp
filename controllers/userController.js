@@ -1,5 +1,19 @@
 const User = require("../models/User.js")
 
+exports.mustBeLoggedIn = function(req, res, next) {
+
+    // If user is logged in
+    if(req.session.user) {
+        next()                      // Tell Express to call the  next function in this route
+    } else {
+        req.flash("errors", "Must be logged in to POST")
+        req.session.save(function() {
+            res.redirect("/")
+            console.log("Redirecting to HomePage")
+        })
+    }
+}
+
 exports.login = function(req, res) {
     let user = new User(req.body)
     // user.login(function(result) {               // Solution: This is using a callback Solution. This is the traditional way of doing things
