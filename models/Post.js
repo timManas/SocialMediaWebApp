@@ -1,8 +1,10 @@
 const postCollection = require("../db").db().collection("posts")    // Exports MongoDB Client so we do any operations 
+const ObjectID = require("mongodb").ObjectID        // We pass in string Id here and return ObjectID type
 
-let Post = function(data) {
+let Post = function(data, userid) {
     this.data = data
     this.errors = []
+    this.userid = userid
 }
 
 Post.prototype.cleanUp = function() {
@@ -13,7 +15,10 @@ Post.prototype.cleanUp = function() {
     this.data = {
         title: this.data.title.trim(),
         body: this.data.body.trim(),
-        createdDate: new Date() 
+        createdDate: new Date(),
+        
+        // author: this.userid             // Best pratice - Dont store this as string of text  but store it as object id object type
+        author: ObjectID(this.userid)
     }
 }
 

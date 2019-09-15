@@ -22,7 +22,7 @@ exports.login = function(req, res) {
     
     // Remmeber its the Model and not the controller handling the business Logic
     user.login().then(function(result) {
-        req.session.user = {avatar: user.avatar, username: user.data.username}
+        req.session.user = {avatar: user.avatar, username: user.data.username, _id:user.data._id}
         reqç.session.save(function() {
             res.redirect("/")
         })
@@ -47,7 +47,7 @@ exports.register = function(req, res) {
     let user = new User(req.body)
     user.register().then(()=> {
 
-        req.session.user = {avatar: user.avatar, username: user.data.username}
+        req.session.user = {avatar: user.avatar, username: user.data.username, _id:user.data._id}
         req.session.save(function() {
             res.redirect("/")
         })
