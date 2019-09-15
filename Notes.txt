@@ -96,3 +96,9 @@ Callback
 
 25. We create the header.ejs file so that the Header is consistent,
 We dont have to change the avatar everytime we create a page
+
+
+26. You can use <% %> to do dynamic stuff using JS
+27. <%= Executes code 
+    <%=  Prints something into ERB file
+    <%# Comments out code within brackets

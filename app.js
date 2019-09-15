@@ -20,6 +20,14 @@ let sessionOptions = session({
 app.use(sessionOptions)     // Our app Now supports Sessions
 app.use(flash())            // Use flash animations
 
+// Tells Express to run this function for EVERY request
+// Because we are calling this before our router, next() will call whatever relevant functions in our route
+app.use(function(req, res, next) {
+    res.locals.user = req.session.user  //We are now working with an object available from our EJS templates
+    next()                      
+})
+
+
 // Note this is how you submit data over the web via json
 // Tell express to add user submitted data onto our request object. So we can access it from req.body
 app.use(express.urlencoded({extended: false}))      // Boilder plate code 
