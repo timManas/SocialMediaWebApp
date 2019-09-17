@@ -15,7 +15,8 @@ router.get("/create-post", userController.mustBeLoggedIn, postController.viewCre
 router.post("/create-post", userController.mustBeLoggedIn, postController.create)
 router.get("/post/:id", postController.viewSingle)           // Notice the id !! - Screen for a single post
 
-
+// Profil related routes
+router.get("/profile/:username", userController.ifUserExists, userController.profilePostsScreen)        // the : makes it dynamic and doesent get added to the URL !!! 
 
 
  module.exports = router            // router is kinda like a new mini express Application

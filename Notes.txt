@@ -130,3 +130,11 @@ _%> ‘Whitespace Slurping’ ending tag, removes all whitespace after it
 - Aggregate works by letting us run multiple opertions
 - Aggregate is not modifying any data in the database
 - It is simply returning the data
+
+34.  The : (ex. router.get("/profile/:") )  in the router URL makes it dynamic and doesent get added to the URL !!! 
+
+35. userDoc = new User(userDoc, true)       // Set to true will get the avatar based on their email address
+
+
+36. When you return a promise with resolve(somevalue), "somevalue" will appear on the "then(somevalue)". Similarly for error, it will appear 
+for catch(error)

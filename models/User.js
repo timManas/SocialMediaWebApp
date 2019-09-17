@@ -11,7 +11,7 @@ let User = function (data, getAvatar) {
     if(getAvatar == undefined) {
         getAvatar = false
     }
-    
+
     if(getAvatar){
         this.getAvatar()
     }
@@ -125,4 +125,37 @@ User.prototype.getAvatar = function () {
     this.avatar = `https://gravatar.com/avatar/${md5(this.data.email)}?s=128`
 }
 
+User.findByUsername = function(username) {
+    return new Promise(function(resolve, reject) {
+
+        // Make sure input is valid and not malicious
+        if (typeof(username) != "string") {
+            reject()
+            return
+        }
+        usersCollection.findOne({username: username}).then(function(userDoc) {
+            if(username) {
+                // Filter properties in UserDoc to avoid sending password
+                userDoc = new User(userDoc, true)       // Set to true will get the avatar based on their email address
+                userDoc = {
+                    _id: userDoc.data._id,
+                    username: userDoc.data.username,
+                    avatar: userDoc.avatar
+                }
+
+                // NOTE: The reason we dont want to just pass in UserDoc is because we have password in UserDoc
+                // Hence we have to format userdoc
+                resolve(userDoc)       
+            } else {
+                
+                reject() 
+            }
+        }).catch(function() {
+            reject()
+        })
+
+    })
+}
+
+// Do not cross this
 module.exports = User

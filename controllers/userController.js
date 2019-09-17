@@ -71,3 +71,18 @@ exports.home = function(req, res) {
     }
 }
 
+exports.ifUserExists = function(req, res, next) {
+    User.findByUsername(req.params.username).then(function(userDocument) {
+        req.profileUser = userDocument          // We create a new prooperty "profileUser" under the request
+        next()
+    }).catch(function(error) {
+        res.render("404")
+    })
+}
+
+exports.profilePostsScreen = function(req, res) {
+    res.render("profile", {
+        profileUsername: req.profileUser.username,
+        profileAvatar: req.profileUser.avatar
+    })
+}

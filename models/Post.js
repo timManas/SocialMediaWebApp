@@ -63,8 +63,9 @@ Post.findSingleById = function(id) {
             return
         }
 
-        // Id is valid at this point
+        //  Note - Id is valid at this point
         // let post = await postCollection.findOne({_id: new ObjectID(id)})
+        // We use aggregate instead of findOne when we want to do multiple complex operations
         let posts = await postCollection.aggregate([
             {$match: {_id: new ObjectID(id)}},
             {$lookup: {from: "users", localField: "author", foreignField: "_id", as: "authorDocument"}},
@@ -74,9 +75,12 @@ Post.findSingleById = function(id) {
                 createdDate:1,
                 author:{$arrayElemAt: ["$authorDocument", 0]},
             }}
-        ]).toArray()        // We use aggregate instead of findOne when we want to do multiple complex operations
+        ]).toArray()    
+        
+        
         
         // Clean up author property in each post object
+        // Map returns an array
         posts = posts.map(function(post) {
             post.author = {
                 username: post.author.username,
@@ -85,9 +89,9 @@ Post.findSingleById = function(id) {
             return post
         })
         
-        
+        // Actually post the result
         if (posts.length) {
-            console.log(posts[0])
+            console.log(posts)
             resolve(posts[0])           // Return first item in the array
         } else {
             reject()
