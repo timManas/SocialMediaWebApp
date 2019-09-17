@@ -15,6 +15,7 @@ router.get("/create-post", userController.mustBeLoggedIn, postController.viewCre
 router.post("/create-post", userController.mustBeLoggedIn, postController.create)
 router.get("/post/:id", postController.viewSingle)           // Notice the id !! - Screen for a single post
 router.get("/post/:id/edit", postController.viewEditScreen)
+router.post("/post/:id/edit", postController.edit)    // This is for submitting Form data on the edit Screen
 
 // Profil related routes
 router.get("/profile/:username", userController.ifUserExists, userController.profilePostsScreen)        // the : makes it dynamic and doesent get added to the URL !!! 

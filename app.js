@@ -23,6 +23,11 @@ app.use(flash())            // Use flash animations
 // Tells Express to run this function for EVERY request
 // Because we are calling this before our router, next() will call whatever relevant functions in our route
 app.use(function(req, res, next) {
+    
+    // make all error and success flash messages available from all tempaltes
+    res.locals.errors = req.flash("errors")
+    res.locals.success = req.flash("success")   
+    
     // make current userId  available on req object
     // Now no matter what controller function we are in, there will be a visitorId on the request 
     if(req.session.user) {

@@ -2,10 +2,11 @@ const postCollection = require("../db").db().collection("posts")    // Exports M
 const ObjectID = require("mongodb").ObjectID        // We pass in string Id here and return ObjectID type
 const User = require("./User")
 
-let Post = function(data, userid) {
+let Post = function(data, userid, requestedPostId) {
     this.data = data
     this.errors = []
     this.userid = userid
+    this.requestedPostId = requestedPostId
 }
 
 Post.prototype.cleanUp = function() {
@@ -52,6 +53,42 @@ Post.prototype.create = function() {
         }
     })
 
+}
+
+Post.prototype.update =   function () {
+    return new Promise(async (resolve, reject) => {
+        try {
+
+            // We check the post if it belongs to the proper user
+            let post = await Post.findSingleById(this.requestedPostId, this.userid)
+            if (post.isVisitorOwner) {
+                let status = await this.actuallyUpdate()
+                resolve(status)
+            } else {
+                reject()
+            }
+        } catch {
+            reject()
+        }
+    })
+}
+
+// Updates the database when a user edits a posts
+Post.prototype.actuallyUpdate = function() {
+    return new Promise(async (resolve, reject) => {
+        this.cleanUp()
+        this.validate()
+        if (!this.errors.length) {
+            await postCollection.findOneAndUpdate(
+                {_id: new ObjectID(this.requestedPostId)}, 
+                {$set: {title: this.data.title, body: this.data.body}}
+            )
+            resolve("success")
+        } else {
+            resolve("failure")
+        }
+    
+    })
 }
 
 
