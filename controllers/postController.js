@@ -21,5 +21,14 @@ exports.viewSingle = async function(req, res) {
     } catch {
         res.render("404")
     }
+}
 
+exports.viewEditScreen = async function(req, res) {
+    // We have a try catch because if the post doesent exists with that id, we render 404
+    try {
+        let post = await Post.findSingleById(req.params.id)         // Finds the post based off the id
+        res.render("edit-post", {post: post})
+    } catch {
+        res.render("404")
+    }
 }
