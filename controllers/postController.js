@@ -73,3 +73,17 @@ exports.edit = function(req, res) {
         })
     })
 }
+
+exports.delete = function(req, res) {
+    Post.delete(req.params.id, req.visitorId).then(function() {
+        req.flash("success", "Post successfully deleted")
+        req.session.save(()=> {
+            res.redirect(`/profile/${req.session.user.username}`)
+        })
+    }).catch(function() {
+        req.flash("errors", "Not enough permissions")
+        req.session.save(() => {
+            res.redirect("/")
+        })
+    })
+}
