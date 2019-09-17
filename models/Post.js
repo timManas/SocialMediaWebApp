@@ -54,20 +54,13 @@ Post.prototype.create = function() {
 
 }
 
+
 // TODO :: We dont include the Prototype here ... why ? 
-Post.findSingleById = function(id) {
+// reusablePostQuery is Used multiple times on findSingleById and findAuthorById
+Post.reusablePostQuery = function(unqiueOperations) {
     return new Promise(async function(resolve, reject) {        // We have async since there is DB call
 
-        if (typeof(id) != "string" || !ObjectID.isValid(id)) {
-            reject()
-            return
-        }
-
-        //  Note - Id is valid at this point
-        // let post = await postCollection.findOne({_id: new ObjectID(id)})
-        // We use aggregate instead of findOne when we want to do multiple complex operations
-        let posts = await postCollection.aggregate([
-            {$match: {_id: new ObjectID(id)}},
+        let aggOperations = unqiueOperations.concat([
             {$lookup: {from: "users", localField: "author", foreignField: "_id", as: "authorDocument"}},
             {$project: {            // Project allows us to dictate what fields we want to have. It FILTERS out unwanted content
                 title:1,
@@ -75,7 +68,12 @@ Post.findSingleById = function(id) {
                 createdDate:1,
                 author:{$arrayElemAt: ["$authorDocument", 0]},
             }}
-        ]).toArray()    
+        ])
+
+        //  Note - Id is valid at this point
+        // let post = await postCollection.findOne({_id: new ObjectID(id)})
+        // We use aggregate instead of findOne when we want to do multiple complex operations
+        let posts = await postCollection.aggregate(aggOperations).toArray()    
         
         
         
@@ -89,15 +87,45 @@ Post.findSingleById = function(id) {
             return post
         })
         
+        resolve(posts)
+
+    })
+}
+
+
+// TODO :: We dont include the Prototype here ... why ? 
+Post.findSingleById = function(id) {
+    return new Promise(async function(resolve, reject) {        // We have async since there is DB call
+
+        if (typeof(id) != "string" || !ObjectID.isValid(id)) {
+            reject()
+            return
+        }
+
+        let posts = await Post.reusablePostQuery([
+            {$match: {_id: new ObjectID(id)}}
+        ])
+        
         // Actually post the result
         if (posts.length) {
-            console.log(posts)
+            console.log(posts[0])
             resolve(posts[0])           // Return first item in the array
         } else {
             reject()
         }
 
     })
+}
+
+// Remember these are going to an aggregate
+// The database is performing these actions 
+// Fetch matching author with authorId
+// Sorts it out as well
+Post.findByAuthorId = function(authorId) {
+    return Post.reusablePostQuery([
+        {$match: {author: authorId}},
+        {$sort: {createdDate: -1}}
+    ])
 }
 
 
