@@ -57,7 +57,7 @@ Post.prototype.create = function() {
 
 // TODO :: We dont include the Prototype here ... why ? 
 // reusablePostQuery is Used multiple times on findSingleById and findAuthorById
-Post.reusablePostQuery = function(unqiueOperations) {
+Post.reusablePostQuery = function(unqiueOperations, visitorId) {
     return new Promise(async function(resolve, reject) {        // We have async since there is DB call
 
         let aggOperations = unqiueOperations.concat([
@@ -66,6 +66,7 @@ Post.reusablePostQuery = function(unqiueOperations) {
                 title:1,
                 body:1,
                 createdDate:1,
+                authorId: "$author",     // We need this because we need to specify the authorId in the post
                 author:{$arrayElemAt: ["$authorDocument", 0]},
             }}
         ])
@@ -80,6 +81,7 @@ Post.reusablePostQuery = function(unqiueOperations) {
         // Clean up author property in each post object
         // Map returns an array
         posts = posts.map(function(post) {
+            post.isVisitorOwner = post.authorId.equals(visitorId)
             post.author = {
                 username: post.author.username,
                 avatar: new User(post.author, true).avatar
@@ -94,7 +96,7 @@ Post.reusablePostQuery = function(unqiueOperations) {
 
 
 // TODO :: We dont include the Prototype here ... why ? 
-Post.findSingleById = function(id) {
+Post.findSingleById = function(id, visitorId) {
     return new Promise(async function(resolve, reject) {        // We have async since there is DB call
 
         if (typeof(id) != "string" || !ObjectID.isValid(id)) {
@@ -104,7 +106,7 @@ Post.findSingleById = function(id) {
 
         let posts = await Post.reusablePostQuery([
             {$match: {_id: new ObjectID(id)}}
-        ])
+        ], visitorId)
         
         // Actually post the result
         if (posts.length) {

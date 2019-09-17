@@ -23,6 +23,15 @@ app.use(flash())            // Use flash animations
 // Tells Express to run this function for EVERY request
 // Because we are calling this before our router, next() will call whatever relevant functions in our route
 app.use(function(req, res, next) {
+    // make current userId  available on req object
+    // Now no matter what controller function we are in, there will be a visitorId on the request 
+    if(req.session.user) {
+        req.visitorId = req.session.user._id
+    } else {
+        req.visitorId = 0
+    }
+    
+    // make user session data available  from within view templates
     res.locals.user = req.session.user  //We are now working with an object available from our EJS templates
     next()                      
 })
