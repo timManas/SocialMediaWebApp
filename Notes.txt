@@ -150,3 +150,12 @@ for catch(error)
 
  39. <%= %>  - gets the object properties
  40. <% %>  - just exeuctes the code dynamically     
+
+ 41. Install Markdown (npm install marked) for some HTML slickness
+
+ 42. If you change <%= filterUserHTML(post.body) %> to <%- filterUserHTML(post.body) %>,
+ Then the EJS will no longer project you and it will display as HTML TAGS
+
+
+ 43. We use "Sanitize-html" (npm install sanitize-html) to convert HTML into plain text
+ 44. However Markdown will add HTML tags

@@ -1,6 +1,7 @@
 const postCollection = require("../db").db().collection("posts")    // Exports MongoDB Client so we do any operations 
 const ObjectID = require("mongodb").ObjectID        // We pass in string Id here and return ObjectID type
 const User = require("./User")
+const sanitizeHTML = require("sanitize-html")
 
 let Post = function(data, userid, requestedPostId) {
     this.data = data
@@ -15,8 +16,8 @@ Post.prototype.cleanUp = function() {
 
     // Get rid of any bogus properties
     this.data = {
-        title: this.data.title.trim(),
-        body: this.data.body.trim(),
+        title: sanitizeHTML(this.data.title.trim(), {allowedTags: [], allowedAttributes: {}}),
+        body: sanitizeHTML(this.data.body.trim(), {allowedTags: [], allowedAttributes: {}}),
         createdDate: new Date(),
         
         // author: this.userid             // Best pratice - Dont store this as string of text  but store it as object id object type
@@ -41,8 +42,8 @@ Post.prototype.create = function() {
             // NOTE !! insertOne is a asynchonous Operation. We have no idea how long it will take to store in DB
             // We have two solutions, use then().catch() syntax or async keyword
 
-            postCollection.insertOne(this.data).then(() => {
-                resolve()
+            postCollection.insertOne(this.data).then((info) => {
+                resolve(info.ops[0]._id)    // This will return the id when the post is created
             }).catch(() => {
                 this.errors.push("Please try again later")
                 reject(this.errors)

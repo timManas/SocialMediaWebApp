@@ -3,7 +3,9 @@ const app = express()
 const session = require("express-session")
 const MongoStore = require("connect-mongo")(session)    
 const flash = require("connect-flash")    
+const markdown = require("marked")
 const router = require("./router.js")
+const sanitize = require("sanitize-html")
 
 
 
@@ -23,6 +25,11 @@ app.use(flash())            // Use flash animations
 // Tells Express to run this function for EVERY request
 // Because we are calling this before our router, next() will call whatever relevant functions in our route
 app.use(function(req, res, next) {
+
+    // Make our markdown functions available in EJS templates
+    res.locals.filterUserHTML = function(content) {     // Wtf whos providing the "content" ?? 
+        return markdown(content)
+    }
     
     // make all error and success flash messages available from all tempaltes
     res.locals.errors = req.flash("errors")

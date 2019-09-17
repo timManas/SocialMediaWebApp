@@ -7,10 +7,13 @@ exports.viewCreateScreen = function(req, res) {
 
 exports.create = function(req, res) {
     let post = new Post(req.body, req.session.user._id)       // Create a new body
-    post.create().then(function() {
-        res.send("New post created")
+    post.create().then(function(newId) {
+        // res.send("New post created")
+        req.flash("success", "Successfully created")
+        req.session.save(() => res.redirect(`/post/${newId}`))     // When we create a post, we dont know its id yet
     }).catch(function(errors) {
-        res.send(errors)
+        errors.forEach(error => req.flash("errors", error))  
+        req.session.save(()=> res.redirect("/create-post"))
     })
 }
 
@@ -26,11 +29,16 @@ exports.viewSingle = async function(req, res) {
 exports.viewEditScreen = async function(req, res) {
     // We have a try catch because if the post doesent exists with that id, we render 404
     try {
-        let post = await Post.findSingleById(req.params.id)         // Finds the post based off the id
-        res.render("edit-post", {post: post})
-    } catch {
+        let post = await Post.findSingleById(req.params.id, req.visitorId)
+        if (post.isVisitorOwner) {
+          res.render("edit-post", {post: post})
+        } else {
+          req.flash("errors", "You do not have permission to perform that action.")
+          req.session.save(() => res.redirect("/"))
+        }
+      } catch {
         res.render("404")
-    }
+      }
 }
 
 exports.edit = function(req, res) {
