@@ -205,3 +205,13 @@ We also want to ignore the frontend-js and public folder
 53. Javascript has no notion of classes or inheritance. Behind the scenes it is using prototypes
 hence in JS, "class" is syntatic sugar =/ Regardless, even though you have "class" and "constructor" defined,
 it will still use prototypes behind the scenes
+
+54. When use # in query selector, it refers to the idea
+ex. document.querySelector("#live-search-field")
+
+55. When do we fire off a db search when they start typing in search ?
+- We wait 5-7 seconds after they have stopped typing 
+
+
+
+56. To send asynchous events to the server. We can use "fetch" or "axios" (npm install axios)

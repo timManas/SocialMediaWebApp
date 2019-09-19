@@ -1,3 +1,5 @@
+import axios from "axios"
+
 export default class Search {
     
     // Select DOM Elements  and keep track of useful data
@@ -6,12 +8,21 @@ export default class Search {
         this.headerSearchIcon = document.querySelector(".header-search-icon")
         this.overlay = document.querySelector(".search-overlay")
         this.closeIcon = document.querySelector(".close-live-search")
+        this.inputField = document.querySelector("#live-search-field")      // Refers to id
+        this.resultsArea = document.querySelector(".live-search-results")
+        this.loaderIcon = document.querySelector(".circle-loader")
+        this.typingWaitTimer
+        this.previousValue = ""
         this.events()
     }
 
 
     // Event Listener
     events() {
+        
+        this.inputField.addEventListener("keyup", () => {   // keyup is used when user presses a key and releases
+            this.keyPressHandler()
+        })
 
         this.closeIcon.addEventListener("click", () => {
             this.closeOverlay()
@@ -21,12 +32,40 @@ export default class Search {
             e.preventDefault()
             this.openOverlay()
         })
+
+
     }
 
 
     // Methods 
+
+    // Sets the timer for sending a call to the database
+    keyPressHandler() {
+        let value = this.inputField.value
+        if (value != "" && value != this.previousValue) {
+            clearTimeout(this.typingWaitTimer)      // Clear the timer first 
+            this.showLoaderIcon()
+            this.typingWaitTimer = setTimeout(()=> this.sendRequest(), 3000)
+        }
+
+        this.previousValue = value
+    }
+
+    sendRequest() {
+        axios.post("/search", {searchTerm: this.inputField.value}).then(() => {
+        
+        }).catch(() => {
+            alert("Req failed ")
+        })
+    }
+
+    showLoaderIcon() {
+        this.loaderIcon.classList.add("circle-loader--visible")     // Make loader visible to the user
+    }
+
     openOverlay() {
        this.overlay.classList.add("search-overlay--visible")        // "search-overlay--visible" to the list of classes in the div properties 
+        setTimeout(() => this.inputField.focus(), 50 )
     }
 
     closeOverlay() {
@@ -47,7 +86,7 @@ export default class Search {
         <div class="search-overlay-bottom">
           <div class="container container--narrow py-3">
             <div class="circle-loader"></div>
-            <div class="live-search-results live-search-results--visible">
+            <div class="live-search-results ">
               <div class="list-group shadow-sm">
                 <div class="list-group-item active"><strong>Search Results</strong> (4 items found)</div>
     
