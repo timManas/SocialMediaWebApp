@@ -5,6 +5,21 @@ Outoung: app.js -> router.js
                         -> Goes to userController -> register() -> displays home-guest.ejs
                         -> Register: userController.js -> registers() -> users.js -> register() -> Adds onto MongoDB
 
+
+0. Once you download NodeJs into your computer, you can run it on the command line by just typing 
+"node applictationName"
+Once we have node, then we can use npm to download frameworks like ExpressJS
+
+00. function(req,res, next) is a middleware NodeJS that have access to request(req) and response(res) object
+The req object contains a whole bunch of data about the request, such as parameters, queries, 
+returned data from a form, cookies and more.
+
+The res object is the response sent back to client, 
+this might take the form of res.send, res.render, or res.redirect
+
+====>>>>> IN OTHER WORDS. function(req,res,next) is a STANDARD when we work with servers
+
+000. next - occurs after response is called. It is another middleware
 1. How to launch/start the app ?
 - From the root folder of this project
 - Type in "node app"  or "node app.js"
@@ -159,3 +174,30 @@ for catch(error)
 
  43. We use "Sanitize-html" (npm install sanitize-html) to convert HTML into plain text
  44. However Markdown will add HTML tags
+
+45. We use "Webpack" is a module bundler which bundles code together. We can place this bundle on the public folder
+
+ 45. We seperate the frontend JS with the backend JS
+ 46. Within the front-end JS folder, we created a module folder to host seperate files for new features
+ 47. We just want to export files that the main.js file will use
+ - Need to install the following:
+npm install webpack
+npm install webpack-cli
+npm install @babel/core
+npm install @babel/preset-env
+npm install babel-loader
+
+
+48. Webpack.config.js stores the information on what folders we want to bundle together 
+Hence we use webpack, it will look for this specific file
+
+49. We use  "watch": "nodemon db --ignore frontend-js --ignore public/ & webpack --watch"
+instead of just "watch": "nodemon db" because we want webpack to rebuild after every save. The & will help build
+We also want to ignore the frontend-js and public folder 
+
+50. For windows use:
+ "watch": "start nodemon db --ignore frontend-js --ignore public/ && startwebpack --watch",
+
+
+51. Babel converts our ultra modern JS code to more Traditional code that will work in older browser
+52. Also  require() is NodeJS specific however the import is part of the traditional JS prog language
