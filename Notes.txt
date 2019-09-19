@@ -215,3 +215,8 @@ ex. document.querySelector("#live-search-field")
 
 
 56. To send asynchous events to the server. We can use "fetch" or "axios" (npm install axios)
+
+
+57. We create a new index on MongoDB
+- We have one for id
+- One for text 
