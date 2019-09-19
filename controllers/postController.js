@@ -52,7 +52,6 @@ exports.edit = function(req, res) {
                 res.redirect(`/post/${req.params.id}/edit`)
             })
         } else {
-            console.log("Hit")
             // or user did have permission but had validation errors
             post.errors.forEach(function(error) {
                 req.flash(error)
