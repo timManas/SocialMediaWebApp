@@ -201,3 +201,7 @@ We also want to ignore the frontend-js and public folder
 
 51. Babel converts our ultra modern JS code to more Traditional code that will work in older browser
 52. Also  require() is NodeJS specific however the import is part of the traditional JS prog language
+
+53. Javascript has no notion of classes or inheritance. Behind the scenes it is using prototypes
+hence in JS, "class" is syntatic sugar =/ Regardless, even though you have "class" and "constructor" defined,
+it will still use prototypes behind the scenes
