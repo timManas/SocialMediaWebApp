@@ -223,3 +223,5 @@ ex. document.querySelector("#live-search-field")
 
 58.  How to fetch the DB client
 - Ex: const userCollection = require("../db")    // Reports the CLIENT anD NOT  the DB itself
+
+59. If you are using <%%>, you are entiner EJS 

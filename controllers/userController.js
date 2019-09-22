@@ -1,5 +1,18 @@
 const User = require("../models/User.js")
 const Post = require("../models/Post.js")
+const Follow = require("../models/Follow.js")
+
+exports.sharedProfileData = async function(req, res, next) {
+    let isFollowing = false
+
+    // Check if user already follows other person
+    if (req.session.user) {
+        isFollowing = await Follow.isVisitorFollowing(req.profileUser._id, req.visitorId) 
+    } 
+
+    req.isFollowing = isFollowing
+    next()
+}
 
 exports.mustBeLoggedIn = function(req, res, next) {
 
@@ -88,11 +101,11 @@ exports.profilePostsScreen = function(req, res) {
         res.render("profile", {
             posts: posts,
             profileUsername: req.profileUser.username,
-            profileAvatar: req.profileUser.avatar
+            profileAvatar: req.profileUser.avatar,
+            isFollowing: req.isFollowing
         })
     }).catch(function() {
         res.render("404")
     })
 
-    
 }
