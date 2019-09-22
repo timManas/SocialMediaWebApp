@@ -2,6 +2,7 @@
  const router = express.Router()
  const userController = require("./controllers/userController.js")
  const postController = require("./controllers/postController.js")
+ const followController = require("./controllers/followController.js")
 
  // User related routes 
  router.get("/", userController.home)
@@ -19,7 +20,10 @@ router.post("/post/:id/edit", userController.mustBeLoggedIn, postController.edit
 router.post("/post/:id/delete", userController.mustBeLoggedIn, postController.delete)    // This is for submitting Form data on the edit Screen
 router.post("/search", postController.search)
 
-// Profil related routes
+// Follow Relted Routes
+router.post("/addFollow/:username", userController.mustBeLoggedIn, followController.addFollow)
+
+// Profile related routes
 router.get("/profile/:username", userController.ifUserExists, userController.profilePostsScreen)        // the : makes it dynamic and doesent get added to the URL !!! 
 
 

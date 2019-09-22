@@ -220,3 +220,6 @@ ex. document.querySelector("#live-search-field")
 57. We create a new index on MongoDB
 - We have one for id
 - One for text 
+
+58.  How to fetch the DB client
+- Ex: const userCollection = require("../db")    // Reports the CLIENT anD NOT  the DB itself
