@@ -22,9 +22,11 @@ router.post("/search", postController.search)
 
 // Follow Relted Routes
 router.post("/addFollow/:username", userController.mustBeLoggedIn, followController.addFollow)
+router.post("/removeFollow/:username", userController.mustBeLoggedIn, followController.removeFollow)
 
 // Profile related routes
 router.get("/profile/:username", userController.ifUserExists, userController.sharedProfileData, userController.profilePostsScreen)        // the : makes it dynamic and doesent get added to the URL !!! 
+router.get("/profile/:username/followers", userController.ifUserExists, userController.sharedProfileData, userController.profileFollowersScreen)        // the : makes it dynamic and doesent get added to the URL !!! 
 
 
  module.exports = router            // router is kinda like a new mini express Application
