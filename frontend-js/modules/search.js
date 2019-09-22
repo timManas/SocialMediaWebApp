@@ -1,4 +1,5 @@
 import axios from "axios"
+import DOMPurify from "dompurify"
 
 export default class Search {
     
@@ -70,7 +71,8 @@ export default class Search {
 
     renderResultsHTML(posts) {
       if (posts.length) {
-        this.resultsArea.innerHTML = `<div class="list-group shadow-sm">
+        // DOM purify package will remove any malicious code
+        this.resultsArea.innerHTML = DOMPurify.sanitize(`<div class="list-group shadow-sm">
         <div class="list-group-item active"><strong>Search Results</strong> (${posts.length} post found)</div>
         ${posts.map(post => {
           let postDate = new Date(post.createdDate)
@@ -82,7 +84,7 @@ export default class Search {
         
         }).join("")}
         
-      </div>`
+      </div>`)
       } else {
         this.resultsArea.innerHTML = `<p class="alert alert-danger text-center shadow-sm">No Result Found</p>`
       }
