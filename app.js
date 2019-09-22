@@ -65,4 +65,17 @@ app.set("view engine", "ejs")   // We need to define the view engine
 app.use("/", router)        // Routes our request
 
 
-module.exports = app
+// ======================================================================================
+
+// SOCKET IO STUFF !!!!!
+
+// Create a server which uses our Express app as its handler 
+const server = require("http").createServer(app)
+
+const io = require("socket.io")(server)
+io.on("connection", function() {console.log("New User connected ")})
+
+// module.exports = app
+module.exports = server             // We use server because now we have multiple components 
+
+// Instead of our app listening on port 3000, we use server to power both our express app and socket connection

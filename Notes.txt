@@ -227,3 +227,11 @@ ex. document.querySelector("#live-search-field")
 59. If you are using <%%>, you are entiner EJS 
 
 60. When you need to select a specifc Element # for id   . is for class
+
+
+61. We install socket.io (npm install socket.io) in order to allow continous two way communication
+between the browser and the server 
+
+
+62. So now server is using socket.io, its going to make sure to use a JS designed from a web browser 
+is available from this url ("/socket.io/socket.io.js"")

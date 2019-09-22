@@ -54,7 +54,8 @@ export default class Chat {
     }
 
     openConnection() {
-        alert("Opened connection")
+       this.socket = io()            // This function will OPEN a connection between browser and server 
+
     }
 
 
