@@ -1,4 +1,5 @@
 const postCollection = require("../db").db().collection("posts")    // Exports MongoDB Client so we do any operations 
+const followsCollection = require("../db").db().collection("follows")
 const ObjectID = require("mongodb").ObjectID        // We pass in string Id here and return ObjectID type
 const User = require("./User")
 const sanitizeHTML = require("sanitize-html")
@@ -216,7 +217,21 @@ Post.countsPostByAuthor = function(id) {
     })
 }
 
+Post.getFeed = async function(id) {
+    // Step 1: Create an array of ids that the current user follows
+    let followedUsers = await followsCollection.find({authorId: new ObjectID(id)}).toArray()
+    followedUsers = followedUsers.map(function(followDoc) {
+        return followDoc.followedId         // Map filters out other parameters and only returns the followedId sicne that is what we are interested in
+    })
 
+
+    // Step 2: Look for post where author is in the above array of followed user 
+    return Post.reusablePostQuery([
+        {$match: {author: {$in: followedUsers}}},
+        {$sort: {createdDate: -1}}
+
+    ])  
+}
 
 
 module.exports = Post       // Rememeber we want to return THIS OBJECT  !!!!!!! 

@@ -118,7 +118,7 @@ We dont have to change the avatar everytime we create a page
 27.
 <% 'Scriptlet' tag, for control-flow, no output
 <%_ ‘Whitespace Slurping’ Scriptlet tag, strips all whitespace before it
-<%= Outputs the value into the template (HTML escaped)
+<%= Outputs the value into the template (HTML escaped)  ----- WE WANT TO OUTPUT SOMETHING IN JS
 <%- Outputs the unescaped value into the template
 <%# Comment tag, no execution, no output
 <%% Outputs a literal '<%'

@@ -98,9 +98,13 @@ exports.register = function(req, res) {
 
 }
 
-exports.home = function(req, res) {
+exports.home =  async function(req, res) {
     if(req.session.user) {
-        res.render("home-dashboard")
+
+        // Fetch feed of post for current user
+        let posts = await Post.getFeed(req.session.user._id)        // Create a list of post for the home page to render
+
+        res.render("home-dashboard", {posts: posts})
     } else {
         res.render("home-guest", {regErrors: req.flash("regErrors")})
     }
