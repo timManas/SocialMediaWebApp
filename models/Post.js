@@ -207,4 +207,16 @@ Post.search = function(searchTerm) {
     })
 }
 
+
+Post.countsPostByAuthor = function(id) {
+    return new Promise(async (resolve, reject) => {
+        let postCount = await postCollection.countDocuments({author: id})
+        console.log("postCount: " + postCount)
+        resolve(postCount)
+    })
+}
+
+
+
+
 module.exports = Post       // Rememeber we want to return THIS OBJECT  !!!!!!! 

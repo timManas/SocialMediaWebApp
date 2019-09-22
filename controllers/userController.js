@@ -15,6 +15,23 @@ exports.sharedProfileData = async function(req, res, next) {
 
     req.isVisitorsProfile = isVisitorsProfile
     req.isFollowing = isFollowing
+
+    // retrieve post, follower and following counts
+
+    // This code below SUCKS ..do not use it. We should not use await like this for peroformance reason
+    // let postCount = await Post.countsPostByAuthor()
+    // let followerCount = await Follow.countsFollowersById()
+    // let followingCount = await Follow.countFollowingById()
+
+    let postCountPromise = Post.countsPostByAuthor(req.profileUser._id)
+    let followerCountPromise = Follow.countFollowersById(req.profileUser._id)
+    let followingCountPromise = Follow.countFollowingById(req.profileUser._id)
+    let [postCount, followerCount, followingCount] = await Promise.all([postCountPromise, followerCountPromise, followingCountPromise])
+
+    req.postCount = postCount
+    req.followerCount = followerCount
+    req.followingCount = followingCount
+
     next()
 }
 
@@ -108,7 +125,12 @@ exports.profilePostsScreen = function(req, res) {
             profileUsername: req.profileUser.username,
             profileAvatar: req.profileUser.avatar,
             isFollowing: req.isFollowing, 
-            isVisitorsProfile: req.isVisitorsProfile
+            isVisitorsProfile: req.isVisitorsProfile,
+            counts: {
+                postCount: req.postCount,
+                followerCount: req.followerCount,
+                followingCount: req.followingCount
+            }
         })
     }).catch(function() {
         res.render("404")
@@ -129,7 +151,12 @@ exports.profileFollowersScreen = async function(req, res) {
             profileUsername: req.profileUser.username,
             profileAvatar: req.profileUser.avatar,
             isFollowing: req.isFollowing, 
-            isVisitorsProfile: req.isVisitorsProfile
+            isVisitorsProfile: req.isVisitorsProfile,
+            counts: {
+                postCount: req.postCount,
+                followerCount: req.followerCount,
+                followingCount: req.followingCount
+            }
         })
     } catch(e) {
         console.log("Error")
@@ -152,7 +179,12 @@ exports.profileFollowingScreen = async function(req, res) {
             profileUsername: req.profileUser.username,
             profileAvatar: req.profileUser.avatar,
             isFollowing: req.isFollowing, 
-            isVisitorsProfile: req.isVisitorsProfile
+            isVisitorsProfile: req.isVisitorsProfile,
+            counts: {
+                postCount: req.postCount,
+                followerCount: req.followerCount,
+                followingCount: req.followingCount
+            }
         })
     } catch(e) {
         console.log("Error")

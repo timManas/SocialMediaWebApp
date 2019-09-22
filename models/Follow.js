@@ -102,7 +102,6 @@ Follow.isVisitorFollowing = async function(followedId, visitorId) {
 Follow.getFollowersById = function(id) {
     return new Promise(async (resolve, reject) => {
         try {
-            console.log("Hereee")
             let followers = await followCollection.aggregate([
                 {$match: {followedId: id}},
                 {$lookup: {from: "users", localField: "authorId", foreignField: "_id", as: "userDoc"}},
@@ -145,6 +144,20 @@ Follow.getFollowingById = function(id) {
         } catch {
             reject()
         }
+    })
+}
+
+Follow.countFollowersById = function(id) {
+    return new Promise(async (resolve, reject) => {
+        let followerCount = await followCollection.countDocuments({followedId: id})
+        resolve(followerCount)
+    })
+}
+
+Follow.countFollowingById = function(id) {
+    return new Promise(async (resolve, reject) => {
+        let count = await followCollection.countDocuments({authorId: id})
+        resolve(count)
     })
 }
 
