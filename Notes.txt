@@ -225,3 +225,5 @@ ex. document.querySelector("#live-search-field")
 - Ex: const userCollection = require("../db")    // Reports the CLIENT anD NOT  the DB itself
 
 59. If you are using <%%>, you are entiner EJS 
+
+60. When you need to select a specifc Element # for id   . is for class
