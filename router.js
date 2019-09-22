@@ -27,6 +27,8 @@ router.post("/removeFollow/:username", userController.mustBeLoggedIn, followCont
 // Profile related routes
 router.get("/profile/:username", userController.ifUserExists, userController.sharedProfileData, userController.profilePostsScreen)        // the : makes it dynamic and doesent get added to the URL !!! 
 router.get("/profile/:username/followers", userController.ifUserExists, userController.sharedProfileData, userController.profileFollowersScreen)        // the : makes it dynamic and doesent get added to the URL !!! 
+router.get("/profile/:username/following", userController.ifUserExists, userController.sharedProfileData, userController.profileFollowingScreen)        // the : makes it dynamic and doesent get added to the URL !!! 
+
 
 
  module.exports = router            // router is kinda like a new mini express Application

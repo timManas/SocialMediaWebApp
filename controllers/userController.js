@@ -103,6 +103,7 @@ exports.profilePostsScreen = function(req, res) {
     // Ask post model for posts by authorid
     Post.findByAuthorId(req.profileUser._id).then(function(posts) {
         res.render("profile", {
+            currentPage: "posts",
             posts: posts,
             profileUsername: req.profileUser.username,
             profileAvatar: req.profileUser.avatar,
@@ -123,7 +124,31 @@ exports.profileFollowersScreen = async function(req, res) {
         
         // We render the page and add the following properties so it exists when we do <%= %> ejs
         res.render('profile-followers', {
+            currentPage: "followers",
             followers: followers,
+            profileUsername: req.profileUser.username,
+            profileAvatar: req.profileUser.avatar,
+            isFollowing: req.isFollowing, 
+            isVisitorsProfile: req.isVisitorsProfile
+        })
+    } catch(e) {
+        console.log("Error")
+        res.render("404")
+    }
+}
+
+
+
+exports.profileFollowingScreen = async function(req, res) {
+    
+    try {
+        
+        let following = await Follow.getFollowingById(req.profileUser._id)
+        
+        // We render the page and add the following properties so it exists when we do <%= %> ejs
+        res.render('profile-following', {
+            currentPage: "following",
+            following: following,
             profileUsername: req.profileUser.username,
             profileAvatar: req.profileUser.avatar,
             isFollowing: req.isFollowing, 
