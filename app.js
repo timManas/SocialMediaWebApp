@@ -71,12 +71,24 @@ app.use("/", router)        // Routes our request
 
 // Create a server which uses our Express app as its handler 
 const server = require("http").createServer(app)
-
 const io = require("socket.io")(server)
+
+// BoilerPlate code for express to work with socket connections
+io.use(function(socket, next) {
+    sessionOptions(socket.request, socket.request.res, next)
+})
+
 io.on("connection", function(socket) {
-    socket.on("chatMessageFromBrowser", function(data) {
-        io.emit("chatMessageFromServer", {message: data.message})           // Emits the message to EVERYONE !!!!  ALL CONNECTED USER
-    })
+    if(socket.request.session.user) {           // Check only if the user is logged in
+        
+        let user = socket.request.session.user     
+        
+        socket.on("chatMessageFromBrowser", function(data) {
+
+            // Now whenever we broadcast this message out, we have the message AND username AND avatar
+            io.emit("chatMessageFromServer", {message: data.message, username: user.username, avatar: user.avatar})           // Emits the message to EVERYONE !!!!  ALL CONNECTED USER
+        })
+    }
 })
 
 // module.exports = app

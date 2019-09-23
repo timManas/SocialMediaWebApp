@@ -4,8 +4,9 @@ export default class Chat {
         this.openedYet = false                                      // Need to check if window opened so we can establish a DB connection
         this.chatWrapper = document.querySelector("#chat-wrapper")      // When you need to select a specifc Element # for id   . is for class
         this.openIcon = document.querySelector(".header-chat-icon")     // Icon for opening the chat
-        
+
         this.injectHTML()
+        this.chatLog = document.querySelector("#chat")
         this.chatField = document.querySelector("#chatField")
         this.chatForm = document.querySelector("#chatForm")
         this.closeIcon = document.querySelector(".chat-title-bar-close") // Icon for closing the chat inside the chat window
@@ -39,13 +40,13 @@ export default class Chat {
     // Methods
 
     sendMessageToServer() {
-        this.socket.emit("chatMessageFromBrowser", {message: this.chatField.value})
+        this.socket.emit("chatMessageFromBrowser", { message: this.chatField.value })
         this.chatField.value = ""
         this.chatField.focus()
     }
 
     showChat() {
-        if(!this.openedYet) {
+        if (!this.openedYet) {
             this.openConnection()
         }
 
@@ -69,10 +70,24 @@ export default class Chat {
 
     openConnection() {
         this.socket = io()            // This function will OPEN a connection between browser and server 
-        this.socket.on("chatMessageFromServer", function(data) {
-            alert(data.message)
+        this.socket.on("chatMessageFromServer", data => {
+            this.displayMessageFromServer(data)
         })
     }
+
+
+    displayMessageFromServer(data) {
+        this.chatLog.insertAdjacentHTML("beforeend", `
+        <div class="chat-other">
+            <a href="#"><img class="avatar-tiny" src="${data.avatar}"></a>
+            <div class="chat-message"><div class="chat-message-inner">
+            <a href="#"><strong>${data.username}:</strong></a>
+            ${data.message}
+            </div></div>
+        </div>
+        `)
+    }
+
 
 
 }
