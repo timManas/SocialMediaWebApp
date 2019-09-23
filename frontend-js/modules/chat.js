@@ -6,6 +6,8 @@ export default class Chat {
         this.openIcon = document.querySelector(".header-chat-icon")     // Icon for opening the chat
         
         this.injectHTML()
+        this.chatField = document.querySelector("#chatField")
+        this.chatForm = document.querySelector("#chatForm")
         this.closeIcon = document.querySelector(".chat-title-bar-close") // Icon for closing the chat inside the chat window
         this.events()
     }
@@ -26,9 +28,21 @@ export default class Chat {
 
         this.openIcon.addEventListener("click", () => this.showChat())
         this.closeIcon.addEventListener("click", () => this.hideChat())
+
+        this.chatForm.addEventListener("submit", (event) => {
+            event.preventDefault()          // When form is submitted, we DO NOT to perform a hard reload
+            this.sendMessageToServer()
+        })
+
     }
 
     // Methods
+
+    sendMessageToServer() {
+        this.socket.emit("chatMessageFromBrowser", {message: this.chatField.value})
+        this.chatField.value = ""
+        this.chatField.focus()
+    }
 
     showChat() {
         if(!this.openedYet) {
@@ -54,8 +68,10 @@ export default class Chat {
     }
 
     openConnection() {
-       this.socket = io()            // This function will OPEN a connection between browser and server 
-
+        this.socket = io()            // This function will OPEN a connection between browser and server 
+        this.socket.on("chatMessageFromServer", function(data) {
+            alert(data.message)
+        })
     }
 
 

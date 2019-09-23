@@ -73,7 +73,11 @@ app.use("/", router)        // Routes our request
 const server = require("http").createServer(app)
 
 const io = require("socket.io")(server)
-io.on("connection", function() {console.log("New User connected ")})
+io.on("connection", function(socket) {
+    socket.on("chatMessageFromBrowser", function(data) {
+        io.emit("chatMessageFromServer", {message: data.message})           // Emits the message to EVERYONE !!!!  ALL CONNECTED USER
+    })
+})
 
 // module.exports = app
 module.exports = server             // We use server because now we have multiple components 
