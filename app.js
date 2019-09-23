@@ -5,7 +5,7 @@ const MongoStore = require("connect-mongo")(session)
 const flash = require("connect-flash")    
 const markdown = require("marked")
 const router = require("./router.js")
-const sanitize = require("sanitize-html")
+const sanitizeHTML = require("sanitize-html")
 
 
 
@@ -81,12 +81,17 @@ io.use(function(socket, next) {
 io.on("connection", function(socket) {
     if(socket.request.session.user) {           // Check only if the user is logged in
         
-        let user = socket.request.session.user     
+        let user = socket.request.session.user 
+        
+        socket.emit("welcome", {username: user.username, avatar: user.avatar})
         
         socket.on("chatMessageFromBrowser", function(data) {
 
             // Now whenever we broadcast this message out, we have the message AND username AND avatar
-            io.emit("chatMessageFromServer", {message: data.message, username: user.username, avatar: user.avatar})           // Emits the message to EVERYONE !!!!  ALL CONNECTED USER
+            // io.emit("chatMessageFromServer", {message: data.message, username: user.username, avatar: user.avatar})           // Emits the message to EVERYONE !!!!  ALL CONNECTED USER
+            socket.broadcast.emit("chatMessageFromServer", {message: sanitizeHTML(data.message, {allowedTags: [], allowedAttributes: {}}), 
+            username: user.username, 
+            avatar: user.avatar})           // Emits the message to EVERYONE EXCEPT SOCKET THAT INITIATED IT !!!!  ALL CONNECTED USER
         })
     }
 })

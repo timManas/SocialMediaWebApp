@@ -20,7 +20,7 @@ exports.create = function(req, res) {
 exports.viewSingle = async function(req, res) {
     try {
         let post = await Post.findSingleById(req.params.id, req.visitorId)
-        res.render("single-post-screen", {post: post})          // the value "post" is the post from the DB
+        res.render("single-post-screen", {post: post, title: post.title})          // the value "post" is the post from the DB
     } catch {
         res.render("404")
     }
