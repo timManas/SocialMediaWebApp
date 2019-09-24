@@ -1,3 +1,5 @@
+import axios from "axios"
+
 export default class RegistrationForm {
 
     constructor() {
@@ -72,10 +74,28 @@ export default class RegistrationForm {
         el.errors = true
     }
 
+    // This runs after the 3000 ms
     usernameAfterDelay() {
         if (this.username.value.length < 3) {
             this.showValidationError(this.username, "Username must be 3 characters long")
         }
+
+        // We use Axios to send asynch checks if the username has been taken already
+        // The server will process this request and will send a response with either true or false
+        if (!this.username.errors) {
+            axios.post("/doesUsernameExists", {username: this.username.value}).then((response) => {
+                if (response.data) {
+                    this.showValidationError(this.username, "Username Already Taken")
+                    this.username.isUnique = false
+                } else {
+                    this.username.isUnique = true
+                }
+            }).catch(() => {
+                // Technical difficulty
+                console.log("Please try again later")
+            })
+        }
+
     }
 
 

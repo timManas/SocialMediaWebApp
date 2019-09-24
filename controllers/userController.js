@@ -2,6 +2,14 @@ const User = require("../models/User.js")
 const Post = require("../models/Post.js")
 const Follow = require("../models/Follow.js")
 
+exports.doesUsernameExists = function(req, res) {
+    User.findByUsername(req.body.username).then(function() {
+        res.json(true)
+    }).catch(function() {
+        res.json(false)
+    })     // This is the Axios post from the FE JS 
+}
+
 exports.sharedProfileData = async function(req, res, next) {
     let isVisitorsProfile = false        //  Need this to check if we are trying to follow ourself
     let isFollowing = false             // Need this to track if we are following another user or not
