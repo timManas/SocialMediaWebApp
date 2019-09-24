@@ -13,6 +13,9 @@ export default class RegistrationForm {
         this.username.previousValue = ""
         this.email = document.querySelector("#email-register")
         this.email.previousValue = ""
+        this.password = document.querySelector("#password-register")
+        this.password.previousValue = ""
+        
 
         this.events()
     }
@@ -24,7 +27,11 @@ export default class RegistrationForm {
         })
 
         this.email.addEventListener("keyup", () => {
-            this.isDifferent(this.email, this.emailHandler)      // THIS IS CALLING THE USERNAMEHANDLER
+            this.isDifferent(this.email, this.emailHandler)      // THIS IS CALLING THE EMAILEHANDLER
+        })
+
+        this.password.addEventListener("keyup", () => {
+            this.isDifferent(this.password, this.passwordHandler)      // THIS IS CALLING THE PASSWPRDHANDLER
         })
     }
 
@@ -65,6 +72,19 @@ export default class RegistrationForm {
         this.email.timer = setTimeout(() => this.emailAfterDelay(), 800 ) 
     }
 
+
+
+    passwordHandler() {      
+        
+        // This method will run after every keystroke which changes the fields value
+        // After each keyset, we want to reset the timer 
+        // Only after 3000 ms, you want to run this method
+        this.password.errors = false            // We need this to instantiate if there are errors or not on fields
+        this.passwordImmediately()
+        clearTimeout(this.password.timer)
+        this.password.timer = setTimeout(() => this.passwordAfterDelay(), 800 ) 
+    }
+
     emailAfterDelay() {
         if (!/^\S+@+\S+$/.test(this.email.value)) {
             this.showValidationError(this.email, "Must provide valid email")
@@ -103,6 +123,16 @@ export default class RegistrationForm {
         }
     }
 
+    passwordImmediately() {
+        if (this.password.value.length > 50) {
+            this.showValidationError(this.password, "Password cannot exceed 50 characters ")
+        } 
+
+        if (!this.password.errors) {
+            this.hideValidationError(this.password)
+        }
+    }
+
     hideValidationError(el) {
         el.nextElementSibling.classList.remove("liveValidateMessage--visible")
     }
@@ -135,6 +165,12 @@ export default class RegistrationForm {
             })
         }
 
+    }
+
+    passwordAfterDelay() {
+        if (this.password.value.length < 5 ) {
+            this.showValidationError(this.password, "Passowrd must be atleast 5 Characters")
+        }
     }
 
 
