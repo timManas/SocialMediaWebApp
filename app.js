@@ -9,6 +9,15 @@ const router = require("./router.js")
 const sanitizeHTML = require("sanitize-html")
 
 
+// Note this is how you submit data over the web via json
+// Tell express to add user submitted data onto our request object. So we can access it from req.body
+app.use(express.urlencoded({extended: false}))      // Boilder plate code 
+app.use(express.json())
+
+// Setup API
+// None of the below code will apply to these routes
+// It allows us to seperate 
+app.use("/api", require("./router-api"))
 
 // We need to configur the session to trust users who have successfully Logged in
 let sessionOptions = session({
@@ -50,10 +59,7 @@ app.use(function(req, res, next) {
 })
 
 
-// Note this is how you submit data over the web via json
-// Tell express to add user submitted data onto our request object. So we can access it from req.body
-app.use(express.urlencoded({extended: false}))      // Boilder plate code 
-app.use(express.json())
+
 
 // We need to tell express where to find our "views"
 app.use(express.static("./public/")) // location of the static assets

@@ -1,6 +1,7 @@
 const User = require("../models/User.js")
 const Post = require("../models/Post.js")
 const Follow = require("../models/Follow.js")
+const jwt = require("jsonwebtoken")
 
 exports.doesUsernameExists = function(req, res) {
     User.findByUsername(req.body.username).then(function() {
@@ -208,5 +209,40 @@ exports.profileFollowingScreen = async function(req, res) {
     } catch(e) {
         console.log("Error")
         res.render("404")
+    }
+}
+
+
+exports.apiLogin = function(req, res) {
+    let user = new User(req.body)
+    // user.login(function(result) {               // Solution: This is using a callback Solution. This is the traditional way of doing things
+    //     res.send(result)
+    // })                        
+    
+    // Remmeber its the Model and not the controller handling the business Logic
+    user.login().then(function(result) {
+
+        // Here we want to send a Token is password is correct SEEN on POSTMAN
+        // process.env.JWTSECRET refers to the Env variable for our secret pass phrase
+        res.json(jwt.sign({_id: user.data._id}, process.env.JWTSECRET, {expiresIn: "30m"}))
+
+    }).catch(function(e) {
+        res.json("Fail Authentication")
+    })         // then() executes if promise was successful and catch() executes if promise has failed
+}
+
+
+exports.apiMustBeLoggedIn = function(req, res, next) {
+
+    try {
+        // We need to check if the token is legit
+        // We need to pass in the secret phrase for verifcation and comparison
+        req.apiUser = jwt.verify(req.body.token, process.env.JWTSECRET)
+        next()
+
+        // the Next() will allow us to access "req.apiUser"
+
+    } catch {
+        req.json("Token Not Valid")
     }
 }

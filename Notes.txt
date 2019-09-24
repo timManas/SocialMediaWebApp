@@ -245,3 +245,21 @@ Call is method available to functions.
 - Users type in the API call to the createpost or whatever 
 - Caused by cookies 
 - This type of attack see or access the account
+
+
+65. API will be used to login,create post, modify and delete
+
+66. Download POSTMAN to test the API !!!!
+
+
+67. app.use(x()) - Runs this funciton for EVERY ROUTE !!!! 
+
+
+
+68. Two ways of handling authentication
+1. Sessions - which is currently already being used by the web app
+2. Tokens - JSONWebTokens - INDUSTRY STANDARD
+
+
+
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZDdkNGY4MDNiN2Y2ZTI3MzhlYjgxM2EiLCJpYXQiOjE1NjkzNDE2OTUsImV4cCI6MTU2OTM0MzQ5NX0.r2CxxhLgpLGHKukucMabw01Nqh1nmw1M-CY9IAEW9eY

@@ -94,3 +94,14 @@ exports.search = function(req, res) {
         res.json([])            // If request fails then return empty JSON array
     }) 
 }
+
+exports.apiCreate = function(req, res) {
+    let post = new Post(req.body, req.apiUser._id)      // WTF ? Where is req.apiUser coming from ? It is coming from the previous method (apiMustBeLoggedIn) in userController
+    post.create().then(function(newId) {
+        // res.send("New post created")
+        res.json("Congrats")
+        
+    }).catch(function(errors) {
+       res.json(errors)
+    })
+}
