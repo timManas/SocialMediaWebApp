@@ -71,11 +71,12 @@ exports.login = function(req, res) {
     // Remmeber its the Model and not the controller handling the business Logic
     user.login().then(function(result) {
         req.session.user = {avatar: user.avatar, username: user.data.username, _id:user.data._id}
-        reqç.session.save(function() {
+        req.session.save(function() {
             res.redirect("/")
         })
 
     }).catch(function(e) {
+        console.log("Error Triggered")
         req.flash("errors", e)          // this actually does this req.session.flash.errors = [e]
         req.session.save(function() {
             res.redirect("/")
