@@ -4,6 +4,7 @@ const session = require("express-session")
 const MongoStore = require("connect-mongo")(session)    
 const flash = require("connect-flash")    
 const markdown = require("marked")
+const csrf = require("csurf")
 const router = require("./router.js")
 const sanitizeHTML = require("sanitize-html")
 
@@ -61,9 +62,27 @@ app.use(express.static("./public/")) // location of the static assets
 app.set("views", "./views/")       // The second argument is the name of the file(In this case it is views)
 app.set("view engine", "ejs")   // We need to define the view engine
 
+// Needs to have a valid token otherwise it will throw and error
+app.use(csrf())
+app.use(function(req, res, next) {
+    res.locals.csrfToken = req.csrfToken()          // This is the Token that the user needs to submit to prevent CSRF
+    next()
+})
+
 // Route our requests
 app.use("/", router)        // Routes our request
 
+// Redirect the user if CSRF if found
+app.use(function(err, req, res, next) {
+    if (err) {
+        if (err.code == "EBADCSRFTOKEN") {
+            req.flash("errors", "Cross Site request fogery detected")
+            req.session.save(() => res.redirect("/ "))
+        }
+    } else {
+        res.render("404")
+    }
+})
 
 // ======================================================================================
 
