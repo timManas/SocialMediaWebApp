@@ -9,19 +9,28 @@ export default class RegistrationForm {
         this.insertValidationElements()
 
         // Fetch the Form Id's
+        this.form = document.querySelector("#registration-form")
         this.username = document.querySelector("#username-register")
         this.username.previousValue = ""
         this.email = document.querySelector("#email-register")
         this.email.previousValue = ""
         this.password = document.querySelector("#password-register")
         this.password.previousValue = ""
-        
 
+         // Axios will turn these to true if its Uniq
+        this.username.isUnique = false         
+        this.email.isUnique = false 
         this.events()
     }
 
     // Events
     events() {
+
+        this.form.addEventListener("submit", e => {
+            e.preventDefault()
+            this.formSubmitHandler()
+        })
+
         this.username.addEventListener("keyup", () => {
             this.isDifferent(this.username, this.usernameHandler)      // THIS IS CALLING THE USERNAMEHANDLER
         })
@@ -33,9 +42,40 @@ export default class RegistrationForm {
         this.password.addEventListener("keyup", () => {
             this.isDifferent(this.password, this.passwordHandler)      // THIS IS CALLING THE PASSWPRDHANDLER
         })
+
+        // We have blue to take care of cases where the user immediately escapes to the next field super quick
+        // Thereby bypassing the 3000 ms check
+        this.username.addEventListener("blur", () => {
+            this.isDifferent(this.username, this.usernameHandler)      // THIS IS CALLING THE USERNAMEHANDLER
+        })
+
+        this.email.addEventListener("blur", () => {
+            this.isDifferent(this.email, this.emailHandler)      // THIS IS CALLING THE EMAILEHANDLER
+        })
+
+        this.password.addEventListener("blur", () => {
+            this.isDifferent(this.password, this.passwordHandler)      // THIS IS CALLING THE PASSWPRDHANDLER
+        })
     }
 
     // Methods
+
+    // We want all our validation to run and return no errors
+    formSubmitHandler() {
+        this.usernameImmediately()
+        this.usernameAfterDelay()
+        this.emailAfterDelay()
+        this.passwordImmediately()
+        this.passwordAfterDelay()
+
+        // If everything is PERFECT !!! 
+        if (this.username.isUnique && !this.username.errors &&
+            this.email.isUnique && !this.email.errors &&
+            !this.password.errors) {
+            this.form.submit()
+        }
+
+    }
 
     isDifferent(el, handler) {
         if (el.previousValue != el.value) {
