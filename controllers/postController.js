@@ -1,85 +1,85 @@
 const Post = require("../models/Post.js")          // Import Post Model
 
-exports.viewCreateScreen = function(req, res) {
+exports.viewCreateScreen = function (req, res) {
     // res.render("create-post", {username: req.session.user.username, avatar: req.session.user.avatar})
     res.render("create-post")       // We can get rid of second argument because this is being called in app.js
 }
 
-exports.create = function(req, res) {
+exports.create = function (req, res) {
     let post = new Post(req.body, req.session.user._id)       // Create a new body
-    post.create().then(function(newId) {
+    post.create().then(function (newId) {
         // res.send("New post created")
         req.flash("success", "Successfully created")
         req.session.save(() => res.redirect(`/post/${newId}`))     // When we create a post, we dont know its id yet
-    }).catch(function(errors) {
-        errors.forEach(error => req.flash("errors", error))  
-        req.session.save(()=> res.redirect("/create-post"))
+    }).catch(function (errors) {
+        errors.forEach(error => req.flash("errors", error))
+        req.session.save(() => res.redirect("/create-post"))
     })
 }
 
-exports.viewSingle = async function(req, res) {
+exports.viewSingle = async function (req, res) {
     try {
         let post = await Post.findSingleById(req.params.id, req.visitorId)
-        res.render("single-post-screen", {post: post, title: post.title})          // the value "post" is the post from the DB
+        res.render("single-post-screen", { post: post, title: post.title })          // the value "post" is the post from the DB
     } catch {
         res.render("404")
     }
 }
 
-exports.viewEditScreen = async function(req, res) {
+exports.viewEditScreen = async function (req, res) {
     // We have a try catch because if the post doesent exists with that id, we render 404
     try {
         let post = await Post.findSingleById(req.params.id, req.visitorId)
         if (post.isVisitorOwner) {
-          res.render("edit-post", {post: post})
+            res.render("edit-post", { post: post })
         } else {
-          req.flash("errors", "You do not have permission to perform that action.")
-          req.session.save(() => res.redirect("/"))
+            req.flash("errors", "You do not have permission to perform that action.")
+            req.session.save(() => res.redirect("/"))
         }
-      } catch {
+    } catch {
         res.render("404")
-      }
+    }
 }
 
-exports.edit = function(req, res) {
+exports.edit = function (req, res) {
     let post = new Post(req.body, req.visitorId, req.params.id)
     post.update().then((status) => {
-        
+
         if (status == "success") {
             // Post was succesfully updated in DB
             req.flash("success", "Successfully Updated")
-            req.session.save(function(){
+            req.session.save(function () {
                 res.redirect(`/post/${req.params.id}/edit`)
             })
         } else {
             // or user did have permission but had validation errors
-            post.errors.forEach(function(error) {
+            post.errors.forEach(function (error) {
                 req.flash(error)
-            }) 
-            req.session.save(function() {
-                res.redirect(`/post/${req.params.id}/edit`)
-                
             })
-            
+            req.session.save(function () {
+                res.redirect(`/post/${req.params.id}/edit`)
+
+            })
+
         }
-        
+
     }).catch(() => {
         // A post with the requested id doesent exists
         // or if the current visitor is not the owner of the requested post
         req.flash("errors", "Not enough permission to perform action")
-        req.session.save(function() {
+        req.session.save(function () {
             res.redirect("/")
         })
     })
 }
 
-exports.delete = function(req, res) {
-    Post.delete(req.params.id, req.visitorId).then(function() {
+exports.delete = function (req, res) {
+    Post.delete(req.params.id, req.visitorId).then(function () {
         req.flash("success", "Post successfully deleted")
-        req.session.save(()=> {
+        req.session.save(() => {
             res.redirect(`/profile/${req.session.user.username}`)
         })
-    }).catch(function() {
+    }).catch(function () {
         req.flash("errors", "Not enough permissions")
         req.session.save(() => {
             res.redirect("/")
@@ -87,21 +87,29 @@ exports.delete = function(req, res) {
     })
 }
 
-exports.search = function(req, res) {
+exports.search = function (req, res) {
     Post.search(req.body.searchTerm).then((posts) => {
         res.json(posts)
     }).catch(() => {
         res.json([])            // If request fails then return empty JSON array
-    }) 
+    })
 }
 
-exports.apiCreate = function(req, res) {
+exports.apiCreate = function (req, res) {
     let post = new Post(req.body, req.apiUser._id)      // WTF ? Where is req.apiUser coming from ? It is coming from the previous method (apiMustBeLoggedIn) in userController
-    post.create().then(function(newId) {
+    post.create().then(function (newId) {
         // res.send("New post created")
         res.json("Congrats")
-        
-    }).catch(function(errors) {
-       res.json(errors)
+
+    }).catch(function (errors) {
+        res.json(errors)
+    })
+}
+
+exports.apiDelete = function (req, res) {
+    Post.delete(req.params.id, req.apiUser._id).then(() => {
+        res.json("Successfully Deleted")
+    }).catch(function () {
+        res.json("Not enough permission to perform action")
     })
 }

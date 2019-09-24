@@ -260,6 +260,7 @@ Call is method available to functions.
 1. Sessions - which is currently already being used by the web app
 2. Tokens - JSONWebTokens - INDUSTRY STANDARD
 
-
+69. When we sign the token, we are trusting the token to be validation
+The secret phrase encrypts the token and makes it valid 
 
 eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZDdkNGY4MDNiN2Y2ZTI3MzhlYjgxM2EiLCJpYXQiOjE1NjkzNDE2OTUsImV4cCI6MTU2OTM0MzQ5NX0.r2CxxhLgpLGHKukucMabw01Nqh1nmw1M-CY9IAEW9eY
