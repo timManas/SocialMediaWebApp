@@ -235,3 +235,7 @@ between the browser and the server
 
 62. So now server is using socket.io, its going to make sure to use a JS designed from a web browser 
 is available from this url ("/socket.io/socket.io.js"")
+
+
+63. Handlers are fucked. Using "handler.call(this)" you will call the handler of the Object
+Call is method available to functions.
