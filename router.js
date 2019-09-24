@@ -10,6 +10,7 @@
  router.post("/login", userController.login)
  router.post("/logout", userController.logout)
  router.post("/doesUsernameExists", userController.doesUsernameExists)
+ router.post("/doesEmailExists", userController.doesEmailExists)
 
 
  // Post relted Routes

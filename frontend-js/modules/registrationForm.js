@@ -11,6 +11,8 @@ export default class RegistrationForm {
         // Fetch the Form Id's
         this.username = document.querySelector("#username-register")
         this.username.previousValue = ""
+        this.email = document.querySelector("#email-register")
+        this.email.previousValue = ""
 
         this.events()
     }
@@ -19,6 +21,10 @@ export default class RegistrationForm {
     events() {
         this.username.addEventListener("keyup", () => {
             this.isDifferent(this.username, this.usernameHandler)      // THIS IS CALLING THE USERNAMEHANDLER
+        })
+
+        this.email.addEventListener("keyup", () => {
+            this.isDifferent(this.email, this.emailHandler)      // THIS IS CALLING THE USERNAMEHANDLER
         })
     }
 
@@ -46,7 +52,40 @@ export default class RegistrationForm {
         this.username.errors = false            // We need this to instantiate if there are errors or not on fields
         this.usernameImmediately()
         clearTimeout(this.username.timer)
-        this.username.timer = setTimeout(() => this.usernameAfterDelay(), 3000 ) 
+        this.username.timer = setTimeout(() => this.usernameAfterDelay(), 800 ) 
+    }
+
+    emailHandler() {      
+        
+        // This method will run after every keystroke which changes the fields value
+        // After each keyset, we want to reset the timer 
+        // Only after 3000 ms, you want to run this method
+        this.email.errors = false            // We need this to instantiate if there are errors or not on fields
+        clearTimeout(this.email.timer)
+        this.email.timer = setTimeout(() => this.emailAfterDelay(), 800 ) 
+    }
+
+    emailAfterDelay() {
+        if (!/^\S+@+\S+$/.test(this.email.value)) {
+            this.showValidationError(this.email, "Must provide valid email")
+        }
+
+        // If no errors are present... contains @
+        if (!this.email.errors) {
+            axios.post("/doesEmailExists", {email: this.email.value}).then((response) => {
+                
+                // Email exists =()
+                if(response.data) {
+                    this.email.isUnique = false
+                    this.showValidationError(this.email, "Email already taken")
+                } else {
+                    this.email.isUnique = true
+                    this.hideValidationError(this.email)
+                }
+            }).catch(() => {
+                console.log("Please try again later")
+            })
+        }
     }
 
     usernameImmediately() {

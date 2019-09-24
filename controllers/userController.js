@@ -10,6 +10,11 @@ exports.doesUsernameExists = function(req, res) {
     })     // This is the Axios post from the FE JS 
 }
 
+exports.doesEmailExists = async function(req, res) {
+    let emailBool = await User.doesEmailExists(req.body.email)
+    res.json(emailBool)
+}
+
 exports.sharedProfileData = async function(req, res, next) {
     let isVisitorsProfile = false        //  Need this to check if we are trying to follow ourself
     let isFollowing = false             // Need this to track if we are following another user or not
