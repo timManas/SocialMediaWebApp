@@ -36,9 +36,48 @@ export default class RegistrationForm {
     // Yea ? Well the handler.call(this) will invoke handler aka userHandler() and call this function
     // BOOOM. usernameHandler EQUALS(==) handler
     // Think of it as a reference and calling it as a method using call(this)
-    usernameHandler() {                     
-        alert("Username handler just ran")
+    usernameHandler() {      
+        
+        // This method will run after every keystroke which changes the fields value
+        // After each keyset, we want to reset the timer 
+        // Only after 3000 ms, you want to run this method
+        this.username.errors = false            // We need this to instantiate if there are errors or not on fields
+        this.usernameImmediately()
+        clearTimeout(this.username.timer)
+        this.username.timer = setTimeout(() => this.usernameAfterDelay(), 3000 ) 
     }
+
+    usernameImmediately() {
+        if (this.username.value != "" && !/^([a-zA-Z0-9]+)$/.test(this.username.value)) {
+            this.showValidationError(this.username, "Username can only contain letters and numbers")
+        }
+
+        if (this.username.value.length > 30) {
+            this.showValidationError(this.username, "Username cannot exceed 30 characters")
+        }
+
+        // The moment there are no errors in the username, then we hide the error message
+        if(!this.username.errors) {
+            this.hideValidationError(this.username)
+        }
+    }
+
+    hideValidationError(el) {
+        el.nextElementSibling.classList.remove("liveValidateMessage--visible")
+    }
+
+    showValidationError(el, message) {
+        el.nextElementSibling.innerHTML = message
+        el.nextElementSibling.classList.add("liveValidateMessage--visible")
+        el.errors = true
+    }
+
+    usernameAfterDelay() {
+        if (this.username.value.length < 3) {
+            this.showValidationError(this.username, "Username must be 3 characters long")
+        }
+    }
+
 
     insertValidationElements() {
         this.allFields.forEach(function(el) {
