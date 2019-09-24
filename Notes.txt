@@ -275,4 +275,15 @@ UNLESS that domain says its ok to do so
 72. Since we want our api to be available to everyone, we want to use the CORS package
 - npm install cors
 
+
+73. We create a ProcFile to push content to Heroku
+
+74.Trying to push to Heroku ?
+1. Login First 
+- heroku login
+2. Push all your code except env and node modules to github
+3. Type this:
+- heroku git:remote -a complexappsocialmedia
+- git push heroku master
+
 eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZDdkNGY4MDNiN2Y2ZTI3MzhlYjgxM2EiLCJpYXQiOjE1NjkzNDE2OTUsImV4cCI6MTU2OTM0MzQ5NX0.r2CxxhLgpLGHKukucMabw01Nqh1nmw1M-CY9IAEW9eY
